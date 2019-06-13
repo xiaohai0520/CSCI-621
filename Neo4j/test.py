@@ -1,19 +1,22 @@
-from neo4j import GraphDatabase
 
-driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "sunxu90520"))
+from create_database import *
 
-def add_friend(tx, name, friend_name):
-    tx.run("MERGE (a:Person {name: $name}) "
-           "MERGE (a)-[:KNOWS]->(friend:Person {name: $friend_name})",
-           name=name, friend_name=friend_name)
+def test():
+    db = connectdb()
 
-def print_friends(tx, name):
-    for record in tx.run("MATCH (a:Person)-[:KNOWS]->(friend) WHERE a.name = $name "
-                         "RETURN friend.name ORDER BY friend.name", name=name):
-        print(record["friend.name"])
+    # Drama movies directed by Steven Spielberg.
 
-with driver.session() as session:
-    session.write_transaction(add_friend, "Arthur", "Guinevere")
-    session.write_transaction(add_friend, "Arthur", "Lancelot")
-    session.write_transaction(add_friend, "Arthur", "Merlin")
-    session.read_transaction(print_friends, "Arthur")
+    cypher = "MATCH (m:Movie) -[:directBy]- (d:Director)\n"\
+            "WHERE d.name = 'Steven Spielberg'\n"\
+            "WITH m\n"\
+            "MATCH (m:Movie) -[:gen] -(g:Genre)\n"\
+            "WHERE g.genre = 'Drama'\n"\
+            "RETURN m.name\n"
+
+
+    find = db.run(cypher)
+
+    for i in find:
+        print(i)
+
+test()
