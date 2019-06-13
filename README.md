@@ -1,2 +1,2 @@
-# H2_Database
-H2 database practice for CSCI621
+# SQL H2 & NoSQL Neo4j
+
