@@ -14,6 +14,17 @@ actors = {}
 directors = {}
 genres = {}
 
+
+def create_movie_node(row,movie_db):
+    print(row.movie_title.strip())
+    # create movie node   include name year score budget
+    movie_node = Node('Movie', name=row.movie_title.strip(), year=row.title_year, score=row.imdb_score, budget=row.budget)
+
+    # insert into graph
+    movie_db.create(movie_node)
+
+    return movie_node
+
 def add_director(name,movie_db,movie_node):
     if name in directors:
         director_node = directors[name]
@@ -61,22 +72,12 @@ def add_genre(name,movie_db,movie_node):
     movie_db.create(r2)
 
 
-def create_movie_node(row,movie_db):
-    # create movie node   include name year score budget
-    movie_node = Node('Movie', name=row.movie_title, year=row.title_year, score=row.imdb_score, budget=row.budget)
-
-    # insert into graph
-    movie_db.create(movie_node)
-
-    return movie_node
 
 
 def connectdb():
     # connect to database
     movie_db = Graph(uri, auth=(username, password))
 
-    # delete previous data
-    movie_db.delete_all()
 
     #return
     return movie_db
@@ -106,15 +107,19 @@ def create_database(movie_db,movie_data):
 
 def main():
     # read data
+    print(1)
     movie_data = read_data(file, cols)
 
     #connect to db
     movie_db = connectdb()
 
+    # delete previous data
+    movie_db.delete_all()
     # create db
     create_database(movie_db,movie_data)
 
-main()
+if __name__ == "__main__":
+    main()
 
 
 
