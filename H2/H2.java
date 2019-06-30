@@ -3,6 +3,7 @@ public class H2 {
     private Connection conn;
     private Statement stmt;
 
+    
     public H2() throws SQLException{
         //connect to the database
         conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
